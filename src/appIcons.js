@@ -1310,7 +1310,7 @@ export const TaskbarAppIcon = GObject.registerClass(
         maybeAnimate()
         this.app.open_new_window(-1)
       } else {
-        let windows = this.window ? [this.window] : this.app.get_windows()
+        let windows = (this.window ? [this.window] : this.app.get_windows()).filter(w => w.get_workspace())
 
         if (windows.length) {
           Main.activateWindow(windows[0])
@@ -1755,7 +1755,7 @@ export function minimizeWindow(app, param, monitor) {
   for (let i = 0; i < windows.length; i++) {
     let w = windows[i]
     if (
-      w.get_workspace() == current_workspace &&
+      w.get_workspace()?.index() == current_workspace.index() &&
       w.showing_on_its_workspace()
     ) {
       w.minimize()
@@ -1782,7 +1782,7 @@ export function activateAllWindows(app, monitor) {
   if (windows.length <= 0) return
 
   for (let i = windows.length - 1; i >= 0; i--) {
-    if (windows[i].get_workspace().index() == activeWorkspace) {
+    if (windows[i].get_workspace()?.index() == activeWorkspace) {
       Main.activateWindow(windows[i])
     }
   }
